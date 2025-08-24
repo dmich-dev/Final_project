@@ -6,7 +6,7 @@ import json
 from io import BytesIO  # To handle image data in memory
 
 # Constants
-API_KEY = ""
+API_KEY = "bTcCmD5UUIZSA97hTTatXNCyrPvWpZPvDQlI1wf8"
 API_URL = f"https://api.nasa.gov/planetary/apod?api_key={API_KEY}"
 DATA_FILE = "finalproject_data_collection.json"
 
@@ -17,6 +17,7 @@ def fetch_apod_data():
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
+        print("API error:", e.response.text if e.response else e)
         messagebox.showerror("Error", f"Failed to fetch APOD data: {e}")
         return None
 
