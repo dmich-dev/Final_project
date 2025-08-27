@@ -6,7 +6,7 @@ import json
 from io import BytesIO  # To handle image data in memory
 
 # Constants
-API_KEY = ""
+API_KEY = "bTcCmD5UUIZSA97hTTatXNCyrPvWpZPvDQlI1wf8"
 API_URL = f"https://api.nasa.gov/planetary/apod?api_key={API_KEY}"
 DATA_FILE = "finalproject_data_collection.json"
 
