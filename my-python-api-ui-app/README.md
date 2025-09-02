@@ -64,4 +64,6 @@ my-python-api-ui-app
 - [Pillow](https://python-pillow.org/) for image processing.
 - [Requests](https://docs.python-requests.org/) for HTTP requests.
 - Tkinter for the GUI framework.
-- Developed as a Programming 2 final project.
+- Developed as a Programming 2 final project. 
+
+this is changes for a assignment that are going to be practice pushed to github
