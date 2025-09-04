@@ -1,7 +1,7 @@
-# NASA APOD Viewer
+# NASA APOD Viewer (Cross-Platform)
 
 ## Project Overview
-This Python application connects to NASA's Astronomy Picture of the Day (APOD) API, fetching daily astronomical images and their descriptions. It features a graphical user interface (GUI) built with Tkinter, allowing users to view, save, and store APOD images and information.
+This Python application connects to NASA's Astronomy Picture of the Day (APOD) API, fetching daily astronomical images and their descriptions. It features a graphical user interface (GUI) built with Tkinter, allowing users to view, save, and store APOD images and information. The application has been optimized to work across Windows, macOS, and Linux platforms.
 
 ## Features
 - Fetches the latest APOD image and description from NASA's API
@@ -11,14 +11,20 @@ This Python application connects to NASA's Astronomy Picture of the Day (APOD) A
 
 ## File Structure
 ```
-my-python-api-ui-app
-├── src
-│   ├── config.py          # Configuration settings (API keys, URLs)
-│   ├── main.py            # Application entry point
-│   └── ui.py              # GUI setup and event handling
-├── data
-│   └── finalproject_data_collection.json  # Stores fetched APOD data
-├── Requirements.txt       # Project dependencies
+Final-project
+├── FinalCopy
+│   ├── src
+│   │   ├── __init__.py    # Package initialization
+│   │   ├── config.py      # Configuration settings (API keys, URLs)
+│   │   ├── main.py        # Application entry point
+│   │   └── ui.py          # GUI setup and event handling
+│   ├── data
+│   │   └── finalproject_data_collection.json  # Stores fetched APOD data
+│   ├── Requirements.txt   # Project dependencies
+│   ├── run_app.sh         # Shell script to run the app from the FinalCopy directory
+│   ├── debug.py           # Debug utility
+│   └── mac_debug.py       # macOS specific debug utility
+├── nasa_photo.sh          # Shell script to run the app from any directory
 └── README.md              # Project documentation
 ```
 
@@ -26,39 +32,66 @@ my-python-api-ui-app
 1. **Clone the repository**:
    ```
    git clone <repository-url>
-   cd my-python-api-ui-app
+   cd Final-project
    ```
 
-2. **Install dependencies**:
-   Ensure you have Python installed. Then, run:
+2. **Set up a virtual environment (recommended)**:
+   ```
+   # For Windows:
+   python -m venv .venv
+   .venv\Scripts\activate
 
-   **For Windows:**
-   ```
-   py -m pip install -r Requirements.txt
-   ```
-
-   **For macOS/Linux:**
-   ```
-   python3 -m pip install -r Requirements.txt
+   # For macOS/Linux:
+   python3 -m venv .venv
+   source .venv/bin/activate
    ```
 
-   If using WSL, you may also need to install additional packages:
+3. **Install dependencies**:
    ```
-   sudo apt-get install python3-tk
-   ```
-
-3. **Run the application**:
+   # Navigate to the FinalCopy directory
+   cd FinalCopy
    
-   Make sure to run from the project root directory:
-   
-   **For Windows:**
-   ```
-   py -m src.main
+   # Install required packages
+   pip install -r Requirements.txt
    ```
 
-   **For macOS/Linux:**
+4. **Run the application**:
+   
+   **Using the provided scripts (easiest):**
+   
+   On macOS/Linux:
    ```
+   # From the FinalCopy directory
+   ./run_app.sh
+   
+   # From any directory
+   /path/to/Final-project/nasa_photo.sh
+   ```
+   
+   **Direct Python command:**
+   ```
+   # From the FinalCopy directory
+   # For Windows:
+   python -m src.main
+   
+   # For macOS/Linux:
    python3 -m src.main
+   ```
+
+5. **Set up an alias (optional, for macOS/Linux users)**:
+   Add the following to your `~/.bashrc` or `~/.zshrc`:
+   ```
+   alias nasaphoto="/path/to/Final-project/nasa_photo.sh"
+   ```
+   
+   Then reload your shell configuration:
+   ```
+   source ~/.bashrc  # or source ~/.zshrc
+   ```
+   
+   Now you can run the application from anywhere simply by typing:
+   ```
+   nasaphoto
    ```
 
 ## API Usage Details
@@ -75,14 +108,23 @@ my-python-api-ui-app
 - Some APOD entries may be videos or have missing images, which may not display correctly.
 - Requires an internet connection to fetch new data from the API.
 - When running in WSL, you may need an X server configured for GUI applications.
+- On macOS, there might be a deprecation warning about Tk, which can be safely ignored (we've added code to suppress this).
 
 ## Debugging Summary
 - Errors during API requests or file operations are shown as pop-up messages in the GUI.
 - If the application fails to fetch or display an image, check your internet connection and API key.
-- For further debugging, review the terminal output or add print statements as needed.
+- For further debugging, you can use the provided debug utilities:
+  ```
+  # Basic debugging (from FinalCopy directory)
+  python3 debug.py
+  
+  # Detailed environment checking for macOS (from FinalCopy directory)
+  python3 mac_debug.py
+  ```
 - Common issues:
-  - "No module named 'src'" - Make sure to run the application from the project root directory and ensure `__init__.py` exists in the src folder
+  - "No module named 'src'" - Make sure to run the application from the FinalCopy directory
   - "No module named 'PIL'" or "No module named 'tkinter'" - Install required dependencies as described in the installation instructions
+  - Path-related issues - We've updated the code to use absolute paths for better cross-platform compatibility
 
 ## Credits and Acknowledgements
 - [NASA APOD API](https://api.nasa.gov/) for providing daily astronomical images and data.

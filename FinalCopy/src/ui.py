@@ -3,6 +3,7 @@ from tkinter import messagebox, filedialog
 from PIL import Image, ImageTk
 import requests
 import json
+import platform
 from io import BytesIO
 from datetime import datetime
 from src.config import API_URL, DATA_FILE
@@ -14,12 +15,23 @@ class APODApp:
         self.root.title("NASA Daily Photo")
         self.root.geometry("800x600")
         self.root.configure(bg="#2E2E2E")
+        
+        # Suppress macOS Tkinter deprecation warning
+        if self.is_macos():
+            os.environ['TK_SILENCE_DEPRECATION'] = '1'
 
         self.create_widgets()
         self.current_pil_image = None
+        
+    def is_macos(self):
+        """Check if running on macOS."""
+        return platform.system() == 'Darwin'
 
     def create_widgets(self):
-        top_frame = tk.Frame(self.root, bg="#2E2E2E")
+        # Use system colors for better compatibility across platforms
+        bg_color = "#2E2E2E" if not self.is_macos() else "#3D3D3D"
+        
+        top_frame = tk.Frame(self.root, bg=bg_color)
         top_frame.pack(fill="x", pady=10)
 
         self.title_label = tk.Label(
@@ -28,7 +40,7 @@ class APODApp:
             font=("Helvetica", 14, "bold"),
             wraplength=600,
             justify="center",
-            bg="#2E2E2E",
+            bg=bg_color,
             fg="white"
         )
         self.title_label.pack(anchor="center", pady=5)
@@ -61,8 +73,12 @@ class APODApp:
             self.root,
             text="Fetch Picture",
             command=self.fetch_apod,
-            bg="gray",
-            fg="white"
+            bg="#4287f5",  # Bright blue background
+            fg="Black",    # White text
+            font=("Helvetica", 10, "bold"),  # Bold text for better visibility
+            relief=tk.RAISED,  # Give buttons a raised appearance
+            padx=10,           # Add horizontal padding
+            pady=5             # Add vertical padding
         )
         fetch_button.pack(pady=20)
 
@@ -70,12 +86,18 @@ class APODApp:
             self.root,
             text="Save Picture",
             command=self.save_current_image,
-            bg="gray",
-            fg="white"
+            bg="#4287f5",  # Bright blue background
+            fg="Black",    # White text
+            font=("Helvetica", 10, "bold"),  # Bold text for better visibility
+            relief=tk.RAISED,  # Give buttons a raised appearance
+            padx=10,           # Add horizontal padding
+            pady=5             # Add vertical padding
         )
         save_button.pack(pady=5)
 
     def fetch_apod(self):
+        # Enable the explanation text before updating
+        self.explanation_text.config(state="normal")
         apod_data = self.fetch_apod_data()
         if apod_data:
             self.update_gui(apod_data)
@@ -95,21 +117,28 @@ class APODApp:
         image_url = apod_data.get("url", "")
         date = apod_data.get('date', "No Date")
 
-        image_response = requests.get(image_url)
-        image_response.raise_for_status()
-        image_data = Image.open(BytesIO(image_response.content))
-        self.current_pil_image = image_data.copy()
+        try:
+            image_response = requests.get(image_url)
+            image_response.raise_for_status()
+            image_data = Image.open(BytesIO(image_response.content))
+            self.current_pil_image = image_data.copy()
 
-        max_width, max_height = 600, 400
-        image_data.thumbnail((max_width, max_height), Image.LANCZOS)
+            max_width, max_height = 600, 400
+            # Use fallback resampling method for macOS compatibility
+            image_data.thumbnail((max_width, max_height))
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to process image: {e}")
+            return
 
-        img = ImageTk.PhotoImage(image_data)
-        self.image_label.config(image=img)
-        self.image_label.image = img
+        # Create PhotoImage and store it as attribute to prevent garbage collection
+        self.photo_image = ImageTk.PhotoImage(image_data)
+        self.image_label.config(image=self.photo_image)
 
         self.title_label.config(text=title)
+        # Clear, insert text, then disable editing
         self.explanation_text.delete("1.0", tk.END)
         self.explanation_text.insert(tk.END, explanation)
+        self.explanation_text.config(state="disabled")  # Make read-only
 
  
         self.save_data_to_file({
@@ -143,7 +172,7 @@ class APODApp:
             messagebox.showerror("Error", f"Failed to save data: {e}")
 
     def save_current_image(self):
-        if hasattr(self.image_label, "image") and self.image_label.image is not None:
+        if hasattr(self, "photo_image") and self.current_pil_image is not None:
             file_path = filedialog.asksaveasfilename(
                 defaultextension=".jpg",
                 filetypes=[("JPEG files", "*.jpg"), ("PNG files", "*.png"), ("All files", "*.*")]
