@@ -31,13 +31,34 @@ my-python-api-ui-app
 
 2. **Install dependencies**:
    Ensure you have Python installed. Then, run:
+
+   **For Windows:**
    ```
-   pip install -r Requirements.txt
+   py -m pip install -r Requirements.txt
+   ```
+
+   **For macOS/Linux:**
+   ```
+   python3 -m pip install -r Requirements.txt
+   ```
+
+   If using WSL, you may also need to install additional packages:
+   ```
+   sudo apt-get install python3-tk
    ```
 
 3. **Run the application**:
+   
+   Make sure to run from the project root directory:
+   
+   **For Windows:**
    ```
-   python -m src.main
+   py -m src.main
+   ```
+
+   **For macOS/Linux:**
+   ```
+   python3 -m src.main
    ```
 
 ## API Usage Details
@@ -53,11 +74,15 @@ my-python-api-ui-app
 - The application only fetches the current day's APOD; browsing previous days is not supported.
 - Some APOD entries may be videos or have missing images, which may not display correctly.
 - Requires an internet connection to fetch new data from the API.
+- When running in WSL, you may need an X server configured for GUI applications.
 
 ## Debugging Summary
 - Errors during API requests or file operations are shown as pop-up messages in the GUI.
 - If the application fails to fetch or display an image, check your internet connection and API key.
 - For further debugging, review the terminal output or add print statements as needed.
+- Common issues:
+  - "No module named 'src'" - Make sure to run the application from the project root directory and ensure `__init__.py` exists in the src folder
+  - "No module named 'PIL'" or "No module named 'tkinter'" - Install required dependencies as described in the installation instructions
 
 ## Credits and Acknowledgements
 - [NASA APOD API](https://api.nasa.gov/) for providing daily astronomical images and data.
