@@ -1,7 +1,7 @@
 # NASA APOD Viewer (Cross-Platform)
 
 ## Project Overview
-This Python application connects to NASA's Astronomy Picture of the Day (APOD) API, fetching daily astronomical images and their descriptions. It features a graphical user interface (GUI) built with Tkinter, allowing users to view, save, and store APOD images and information. The application has been optimized to work across Windows, macOS, and Linux platforms.
+This Python application connects to NASA's Astronomy Picture of the Day (APOD) API, fetching daily astronomical images and their descriptions. It features a graphical user interface (GUI) built with Tkinter, allowing users to view, save, and store APOD images and information. The application has been optimized to work across Windows, macOS, Linux platforms, and Windows Subsystem for Linux (WSL).
 
 ## Features
 - Fetches the latest APOD image and description from NASA's API
@@ -94,6 +94,17 @@ Final-project
    nasaphoto
    ```
 
+6. **Running on WSL (Windows Subsystem for Linux)**:
+   We've included special support for running the application on WSL:
+   ```
+   # From the project root
+   ./wsl_run_app.sh
+   ```
+   
+   For detailed instructions on setting up and running the application in WSL,
+   including configuring an X server for displaying GUI applications, see the 
+   [WSL Guide](WSL_GUIDE.md).
+
 ## API Usage Details
 - The application uses NASA's [APOD API](https://api.nasa.gov/) to fetch daily images and descriptions.
 - You must provide a valid API key in `config.py`. A demo key is included for testing.
@@ -107,7 +118,7 @@ Final-project
 - The application only fetches the current day's APOD; browsing previous days is not supported.
 - Some APOD entries may be videos or have missing images, which may not display correctly.
 - Requires an internet connection to fetch new data from the API.
-- When running in WSL, you may need an X server configured for GUI applications.
+- When running in WSL, you need an X server configured for GUI applications (see [WSL Guide](WSL_GUIDE.md)).
 - On macOS, there might be a deprecation warning about Tk, which can be safely ignored (we've added code to suppress this).
 
 ## Debugging Summary
